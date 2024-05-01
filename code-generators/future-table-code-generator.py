@@ -1,5 +1,6 @@
 from pathlib import Path
 from _code_generation_helpers import *
+MARKETS = ["CME", "CFE", "CBOT", "COMEX", "NYMEX"]
 
 class FutureProperties:
     def __init__(self, ticker, market, name):
@@ -29,8 +30,10 @@ if __name__ == '__main__':
     for line in spdb.split('\n'):
         csv = line.split(',')
         if len(csv) > 2 and csv[2] == 'future':
-            ticker = csv[1].upper()
-            properties[csv[1].upper()] = FutureProperties(ticker, csv[0].upper(), csv[3])
+            market, ticker = csv[0].upper(), csv[1].upper()
+            if market not in MARKETS:
+                continue
+            properties[csv[1].upper()] = FutureProperties(ticker, market, csv[3])
 
     category = ""
 
